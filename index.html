@@ -12,32 +12,44 @@
   <p>Copy + paste from Google Spreadsheets into the first text area below and watch amazing markdown appear in the second text area. You deserve it!</p>
   <textarea name='input' class='js-input' rows='25' cols='80'></textarea>
   <textarea name='output' class='js-output' rows='25' cols='80' readonly></textarea>
+  <p>click + drag this bookmarklet to your browser toolbar: <a href='#' class='js-bookmarklet'>Marksheet</a></p>
 
 
   <script type='text/javascript'>
   
   document.addEventListener('DOMContentLoaded', function() {
+      function convert(input) {
+          var output = '';
+          var lines = input.split('\n');
+          lines.forEach(function(line, i) {
+              var cols = line.split('\t');
+              output += cols.join(' | ');
+              if (i === 0) output += '\n' + cols.map(function() {
+                  return '---';
+              }).join(' | ');
+              output += '\n';
+          });
+          return output;
+      }
+
       var input = document.querySelectorAll('.js-input')[0];
       var output = document.querySelectorAll('.js-output')[0];
       input.addEventListener('keyup', render);
       input.addEventListener('mouseup', render);
 
       function render() {
-          var value = output.value = '';
-          var lines = input.value.split('\n');
-          lines.forEach(function(line, i) {
-              var cols = line.split('\t');
-              value += cols.join(' | ');
-              if (i === 0) {
-                  value += '\n' + cols.map(function() {
-                      return '---';
-                  }).join(' | ');
-              }
-              value += '\n';
-          });
-          output.value = value;
+          output.value = convert(input.value);
       }
+
+      function bookmarklet() {
+          prompt('Copy this markdown', convert(prompt('Past spreadsheet below')));
+      }
+
+      var anchor = document.querySelectorAll('.js-bookmarklet')[0];
+      anchor.href = 'javascript:' + convert.toString() + bookmarklet.toString() + 'bookmarklet()';
+
   });
+
   
   </script>
 
