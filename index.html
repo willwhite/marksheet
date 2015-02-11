@@ -1,0 +1,47 @@
+<!DOCTYPE html >
+<html>
+<head>
+  <meta charset='UTF-8'/>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <title>Marksheet</title>
+</head>
+<body>
+
+  <h1>Marksheet</h1>
+
+  <p>Copy + paste from Google Spreadsheets into the first text area below and watch amazing markdown appear in the second text area. You deserve it!</p>
+  <textarea name='input' class='js-input' rows='25' cols='80'></textarea>
+  <textarea name='output' class='js-output' rows='25' cols='80' readonly></textarea>
+
+
+  <script type='text/javascript'>
+  
+  document.addEventListener('DOMContentLoaded', function() {
+      var input = document.querySelectorAll('.js-input')[0];
+      var output = document.querySelectorAll('.js-output')[0];
+      input.addEventListener('keyup', render);
+      input.addEventListener('mouseup', render);
+
+      function render() {
+          var value = output.value = '';
+          var lines = input.value.split('\n');
+          lines.forEach(function(line, i) {
+              var cols = line.split('\t');
+              value += cols.join(' | ');
+              if (i === 0) {
+                  value += '\n' + cols.map(function() {
+                      return '---';
+                  }).join(' | ');
+              }
+              value += '\n';
+          });
+          output.value = value;
+      }
+  });
+  
+  </script>
+
+</body>
+
+</html>
+
